@@ -13,6 +13,12 @@ O backend é executado separadamente. O frontend não depende de arquivos do rep
 
 No Marco 1 é possível criar, pesquisar, renomear, arquivar e restaurar temas, manter conversas e enviar perguntas a um modelo Ollama escolhido manualmente. A lixeira preserva as conversas. Cancelar a resposta preserva o texto parcial. Recarregar a página recupera o histórico da API.
 
+No Marco 2, selecione Estudar, Memorizar, Aprender ou Praticar na conversa. A troca mantém o histórico e é salva no backend. Novas respostas estruturadas aparecem após validação; rascunhos JSON não são exibidos, pois podem conter gabaritos. Nas mensagens antigas, o conteúdo continua textual.
+
+Em Praticar, responda antes de abrir a referência. Dicas são progressivas, e as tentativas são recuperadas após recarregar. Objetivas são comparadas com um gabarito gerado por IA; abertas recebem referência para revisão sem nota automática. Os cartões de Memorizar não têm agendamento de revisão neste marco.
+
+Para testes sem interferir no uso normal, defina STUDY_API_PORT=18000 e STUDY_WEB_PORT=15173 antes de iniciar os respectivos serviços. O backend aceita a origem local configurada em STUDY_WEB_PORT. O proxy continua restrito a 127.0.0.1. Configure E2E_BASE_URL=http://127.0.0.1:15173 no Playwright. Para exercício real em navegador, com API de produção e banco temporário, use E2E_REAL_MODEL e `npm run test:e2e -- --grep "exercício estruturado real"`.
+
 ## Verificações
 
 Execute `npm run format:check`, `npm run lint`, `npm run typecheck`, `npm test` e `npm run build`.

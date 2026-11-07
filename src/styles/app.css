@@ -276,3 +276,82 @@ summary {
     scroll-behavior: auto !important;
   }
 }
+
+.structured-content {
+  white-space: normal;
+}
+.structured-content h3 {
+  margin-bottom: 20px;
+}
+.content-block p {
+  white-space: pre-wrap;
+}
+.content-block.summary,
+.flashcard,
+.exercise-card {
+  border: 1px solid #c7d4df;
+  border-radius: 8px;
+  padding: 16px;
+  margin: 16px 0;
+  background: #f6f9fc;
+}
+.structured-content h4 {
+  font-weight: 650;
+  margin: 6px 0 12px;
+}
+.structured-content pre {
+  overflow: auto;
+  padding: 16px;
+  background: #eef2f5;
+  border-radius: 8px;
+  white-space: pre;
+}
+.structured-content figcaption {
+  margin: 10px 0;
+  font-size: 0.85rem;
+}
+.table-scroll,
+.formula {
+  overflow-x: auto;
+  margin: 16px 0;
+}
+.structured-content table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+.structured-content td,
+.structured-content th {
+  padding: 10px;
+  border: 1px solid #b4c5d3;
+}
+.timeline {
+  padding-left: 24px;
+  list-style: decimal;
+}
+.diagram svg {
+  display: block;
+  width: 100%;
+  max-width: 500px;
+}
+.exercise-card fieldset {
+  border: 0;
+  padding: 0;
+}
+.exercise-card .choice {
+  display: flex;
+  gap: 10px;
+  align-items: baseline;
+}
+.exercise-card .choice input {
+  width: auto;
+}
+.exercise-card .attempt {
+  margin: 16px 0;
+  padding: 12px;
+  border-left: 3px solid #577e9f;
+  background: white;
+}
+.exercise-card .hint {
+  white-space: pre-wrap;
+}

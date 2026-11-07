@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { modeSchema } from "../features/content/schemas";
 
 export const topicSchema = z.object({
   id: z.string().uuid(),
@@ -12,6 +13,7 @@ export const conversationSchema = z.object({
   topic_id: z.string().uuid(),
   title: z.string(),
   created_at: z.string(),
+  active_mode: modeSchema.default("learn"),
 });
 export const messageSchema = z.object({
   id: z.string().uuid(),
@@ -27,6 +29,10 @@ export const messageSchema = z.object({
   ]),
   model_id: z.string(),
   created_at: z.string(),
+  mode: modeSchema.default("learn"),
+  response_format: z.string().default("text"),
+  notice: z.string().default(""),
+  document: z.unknown().optional(),
 });
 export const jobSchema = z.object({
   id: z.string().uuid(),
@@ -81,7 +87,12 @@ export async function api<T>(
       "Não foi possível acessar a API local. Verifique a conexão e tente novamente.",
     );
   }
-  const value: unknown = await response.json();
+  let value: unknown;
+  try {
+    value = await response.json();
+  } catch {
+    throw new Error("A API retornou uma resposta JSON inválida.");
+  }
   if (!response.ok) {
     const parsed = z
       .object({ error: z.object({ message: z.string() }) })

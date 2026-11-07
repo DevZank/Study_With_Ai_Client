@@ -32,9 +32,7 @@ test("tema, conversa, histórico, cancelamento e recuperação visual", async ({
     .selectOption("e2e:local");
   await page.getByLabel("Sua pergunta").fill("Quero cancelar");
   await page.getByRole("button", { name: "Enviar pergunta" }).click();
-  await expect(page.locator(".assistant").last()).toContainText(
-    "Quero cancelar",
-  );
+
   await page.getByRole("button", { name: "Cancelar resposta" }).click();
   await expect(page.locator(".assistant").last()).toContainText("Cancelada");
   await page.reload();
@@ -46,7 +44,7 @@ test("tema, conversa, histórico, cancelamento e recuperação visual", async ({
   await page.getByRole("button", { name: "Enviar pergunta" }).click();
   await expect(page.getByRole("alert")).toContainText("Falha simulada");
   await expect(page.locator(".assistant").last()).toContainText(
-    "texto parcial",
+    "conteúdo não validado",
   );
   await page.getByText("Gerenciar tema", { exact: true }).click();
   await page.getByLabel("Nome do tema").fill(name + " editado");

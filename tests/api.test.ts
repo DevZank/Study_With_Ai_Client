@@ -3,6 +3,13 @@ import { api, parseStream, modelsSchema } from "../src/lib/api";
 
 afterEach(() => vi.unstubAllGlobals());
 
+it("trata JSON inválido sem expor detalhes técnicos ao usuário", async () => {
+  vi.stubGlobal("fetch", async () => new Response("<html>erro</html>"));
+  await expect(api("/ai/models", modelsSchema)).rejects.toThrow(
+    "resposta JSON inválida",
+  );
+});
+
 it("rejeita dados que não correspondem ao contrato", async () => {
   vi.stubGlobal("fetch", async () => Response.json({ models: "inventado" }));
   await expect(api("/ai/models", modelsSchema)).rejects.toThrow(
