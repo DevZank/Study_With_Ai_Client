@@ -1,0 +1,278 @@
+@import "tailwindcss";
+
+:root {
+  font-family: "Segoe UI", system-ui, sans-serif;
+  color: #202b35;
+  background: #f7f8fa;
+  font-synthesis: none;
+}
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+}
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+button,
+input,
+select,
+textarea {
+  border: 1px solid #a1acb5;
+  border-radius: 8px;
+  padding: 10px 12px;
+  background: white;
+  color: #202b35;
+}
+button {
+  cursor: pointer;
+  font-weight: 600;
+}
+button:hover:enabled {
+  background: #edf1f5;
+}
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+button.primary {
+  background: #253f59;
+  color: white;
+  border-color: #253f59;
+}
+button.primary:hover:enabled {
+  background: #142c44;
+}
+a {
+  color: #224e75;
+}
+:focus-visible {
+  outline: 3px solid #1765a5;
+  outline-offset: 3px;
+}
+label {
+  display: block;
+  font-weight: 600;
+  margin: 14px 0 6px;
+}
+form input,
+form textarea,
+form select {
+  width: 100%;
+}
+form button {
+  margin-top: 12px;
+}
+h1,
+h2,
+h3 {
+  line-height: 1.2;
+}
+h1 {
+  font-size: clamp(1.8rem, 4vw, 3rem);
+  font-weight: 650;
+  margin: 8px 0 24px;
+}
+h2 {
+  font-size: 1.3rem;
+  font-weight: 650;
+  margin: 12px 0;
+}
+h3 {
+  font-size: 1.15rem;
+  font-weight: 600;
+}
+p {
+  line-height: 1.65;
+  margin: 12px 0;
+}
+.layout {
+  display: grid;
+  grid-template-columns: 290px minmax(0, 1fr);
+  min-height: 100dvh;
+}
+aside {
+  background: #fff;
+  border-right: 1px solid #dce2e7;
+  padding: 28px 22px;
+}
+aside input,
+aside select {
+  width: 100%;
+}
+.brand {
+  display: block;
+  font-size: 1.2rem;
+  font-weight: 700;
+  text-decoration: none;
+  margin-bottom: 32px;
+  color: #202b35;
+}
+.brand span {
+  display: block;
+  font-size: 0.65rem;
+  letter-spacing: 0.18em;
+  margin-top: 6px;
+  color: #536675;
+}
+nav a {
+  display: block;
+  padding: 12px;
+  text-decoration: none;
+  border-radius: 8px;
+  overflow-wrap: anywhere;
+}
+aside nav {
+  margin: 16px 0;
+}
+nav a[aria-current] {
+  background: #e5edf4;
+  color: #193e60;
+  font-weight: 600;
+}
+main {
+  padding: clamp(24px, 5vw, 64px);
+  min-width: 0;
+  max-width: 1300px;
+  width: 100%;
+  margin: 0 auto;
+}
+.welcome {
+  max-width: 700px;
+  padding-top: 9vh;
+}
+.welcome h1 {
+  font-size: clamp(2rem, 4.5vw, 4rem);
+  letter-spacing: -0.03em;
+}
+.welcome h2 {
+  margin-top: 50px;
+}
+.eyebrow {
+  font-size: 0.7rem;
+  letter-spacing: 0.15em;
+  font-weight: 700;
+  color: #526879;
+}
+.hint,
+small {
+  color: #52616e;
+  font-size: 0.83rem;
+}
+.topic-head,
+.conversation-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  gap: 16px;
+}
+.topic-head h1 {
+  overflow-wrap: anywhere;
+}
+details {
+  border: 1px solid #d7dfe6;
+  padding: 14px;
+  border-radius: 8px;
+  background: white;
+}
+summary {
+  cursor: pointer;
+  font-weight: 600;
+}
+.actions,
+.tabs {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  align-items: center;
+  margin: 16px 0;
+}
+.tabs {
+  padding: 16px 0;
+  border-bottom: 1px solid #d7dfe6;
+}
+.conversation-head p {
+  font-size: 0.85rem;
+  color: #52616e;
+}
+.messages {
+  margin: 24px 0;
+}
+.message {
+  padding: 18px 22px;
+  border: 1px solid #dde3e9;
+  border-radius: 12px;
+  margin-bottom: 16px;
+  background: #fff;
+}
+.message.user {
+  background: #eaf0f5;
+  margin-left: min(10%, 64px);
+}
+.message header {
+  font-weight: 650;
+  font-size: 0.8rem;
+}
+.message header span {
+  font-weight: 400;
+  color: #52616e;
+}
+.message-content {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.empty {
+  padding: 38px 0;
+  color: #52616e;
+}
+[role="alert"] {
+  border-left: 3px solid #a92f22;
+  background: #fff1ee;
+  padding: 12px;
+  color: #792318;
+}
+.skip-link {
+  position: fixed;
+  top: -100px;
+  left: 12px;
+  padding: 12px;
+  background: white;
+  z-index: 10;
+}
+.skip-link:focus {
+  top: 12px;
+}
+@media (max-width: 760px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+  aside {
+    border-right: 0;
+    border-bottom: 1px solid #dce2e7;
+    padding: 20px;
+  }
+  aside nav {
+    max-height: 180px;
+    overflow-y: auto;
+  }
+  .welcome {
+    padding-top: 0;
+  }
+  .topic-head,
+  .conversation-head {
+    flex-wrap: wrap;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}
