@@ -1,0 +1,22 @@
+name: Qualidade
+on: [push, pull_request]
+permissions:
+  contents: read
+
+jobs:
+  checks:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24.22.1"
+          cache: npm
+          cache-dependency-path: package-lock.json
+      - run: |
+          npm ci
+          if ($LASTEXITCODE) { exit $LASTEXITCODE }
+          foreach ($task in 'format:check', 'lint', 'typecheck', 'test', 'build') {
+            npm run $task
+            if ($LASTEXITCODE) { exit $LASTEXITCODE }
+          }
