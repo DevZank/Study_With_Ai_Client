@@ -8,6 +8,7 @@ import {
   type Topic,
 } from "../../lib/api";
 import { Chat } from "../chat/Chat";
+import { Trails } from "../trails/Trails";
 
 function navigate(topicId = "", conversationId = "") {
   location.hash = topicId
@@ -28,7 +29,9 @@ function useRoute() {
     return () => window.removeEventListener("hashchange", update);
   }, []);
   const match =
-    /^#\/topics\/([a-f0-9-]+)(?:\/conversations\/([a-f0-9-]+))?$/.exec(hash);
+    /^#\/topics\/([a-f0-9-]+)(?:\/conversations\/([a-f0-9-]+))?$/.exec(
+      hash.split("?")[0],
+    );
   return { topicId: match?.[1] ?? "", conversationId: match?.[2] ?? "" };
 }
 
@@ -41,6 +44,9 @@ function TopicPanel({
 }) {
   const client = useQueryClient();
   const [title, setTitle] = useState(topic.title);
+  const [experience, setExperience] = useState(
+    location.hash.includes("view=trails") ? "trails" : "free",
+  );
   const list = useQuery({
     queryKey: ["conversations", topic.id],
     queryFn: () =>
@@ -129,36 +135,75 @@ function TopicPanel({
         </p>
       ) : (
         <>
-          <nav className="tabs" aria-label="Conversas do tema">
-            {list.data?.map((c) => (
-              <a
-                key={c.id}
-                href={"#/topics/" + topic.id + "/conversations/" + c.id}
-                aria-current={selected?.id === c.id ? "page" : undefined}
-              >
-                {c.title}
-              </a>
-            ))}
+          <nav className="tabs" aria-label="Experiência de estudo">
             <button
-              onClick={() => create.mutate()}
-              disabled={topic.status !== "active" || create.isPending}
+              aria-pressed={experience === "free"}
+              onClick={() => {
+                setExperience("free");
+                history.replaceState(
+                  null,
+                  "",
+                  location.pathname +
+                    location.search +
+                    location.hash.split("?")[0],
+                );
+              }}
             >
-              {create.isPending ? "Criando…" : "Nova conversa"}
+              Estudo livre
+            </button>
+            <button
+              aria-pressed={experience === "trails"}
+              onClick={() => {
+                setExperience("trails");
+                history.replaceState(
+                  null,
+                  "",
+                  location.pathname +
+                    location.search +
+                    location.hash.split("?")[0] +
+                    "?view=trails",
+                );
+              }}
+            >
+              Trilhas guiadas
             </button>
           </nav>
-          {list.isPending && <p role="status">Carregando conversas…</p>}
-          {list.error && <p role="alert">{list.error.message}</p>}
-          {selected ? (
-            <Chat
-              key={selected.id}
-              conversationId={selected.id}
-              editable={topic.status === "active"}
-            />
+          {experience === "trails" ? (
+            <Trails topicId={topic.id} editable={topic.status === "active"} />
           ) : (
-            <div className="empty">
-              <h2>Conversas deste tema</h2>
-              <p>Abra uma conversa ou crie uma para começar.</p>
-            </div>
+            <>
+              <nav className="tabs" aria-label="Conversas do tema">
+                {list.data?.map((c) => (
+                  <a
+                    key={c.id}
+                    href={"#/topics/" + topic.id + "/conversations/" + c.id}
+                    aria-current={selected?.id === c.id ? "page" : undefined}
+                  >
+                    {c.title}
+                  </a>
+                ))}
+                <button
+                  onClick={() => create.mutate()}
+                  disabled={topic.status !== "active" || create.isPending}
+                >
+                  {create.isPending ? "Criando…" : "Nova conversa"}
+                </button>
+              </nav>
+              {list.isPending && <p role="status">Carregando conversas…</p>}
+              {list.error && <p role="alert">{list.error.message}</p>}
+              {selected ? (
+                <Chat
+                  key={selected.id}
+                  conversationId={selected.id}
+                  editable={topic.status === "active"}
+                />
+              ) : (
+                <div className="empty">
+                  <h2>Conversas deste tema</h2>
+                  <p>Abra uma conversa ou crie uma para começar.</p>
+                </div>
+              )}
+            </>
           )}
         </>
       )}

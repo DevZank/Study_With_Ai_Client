@@ -17,6 +17,10 @@ No Marco 2, selecione Estudar, Memorizar, Aprender ou Praticar na conversa. A tr
 
 Em Praticar, responda antes de abrir a referência. Dicas são progressivas, e as tentativas são recuperadas após recarregar. Objetivas são comparadas com um gabarito gerado por IA; abertas recebem referência para revisão sem nota automática. Os cartões de Memorizar não têm agendamento de revisão neste marco.
 
+No Marco 3, abra **Trilhas guiadas** em um tema. Informe objetivo, conhecimento prévio e preferências para gerar somente o plano. Edite, reordene, adicione ou arquive módulos; abra uma unidade e solicite sua geração quando desejar. A navegação é livre. Concluir registra dificuldades e gera um resumo usado nas próximas unidades. Gerar nova versão preserva as anteriores. A conclusão atual não certifica domínio ou retenção. Recarregar recupera a seleção e o conteúdo; selecione novamente o modelo local antes de novas gerações.
+
+O backend precisa estar migrado até a revisão 0003, conforme seu README, com backup prévio dos dados pessoais. O E2E `milestone3.e2e.ts` valida plano, edição persistida, geração sob demanda, resumo, contexto, versões e responsividade. Veja a [ADR 0004](docs/architecture/0004-incremental-trails.md).
+
 Para testes sem interferir no uso normal, defina STUDY_API_PORT=18000 e STUDY_WEB_PORT=15173 antes de iniciar os respectivos serviços. O backend aceita a origem local configurada em STUDY_WEB_PORT. O proxy continua restrito a 127.0.0.1. Configure E2E_BASE_URL=http://127.0.0.1:15173 no Playwright. Para exercício real em navegador, com API de produção e banco temporário, use E2E_REAL_MODEL e `npm run test:e2e -- --grep "exercício estruturado real"`.
 
 ## Verificações
