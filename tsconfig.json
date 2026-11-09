@@ -5,7 +5,16 @@
     "module": "ESNext",
     "moduleResolution": "bundler",
     "jsx": "react-jsx",
-    "noEmit": true
+    "noEmit": true,
+    "paths": {
+      "browser-fs-access": ["./node_modules/browser-fs-access/index.d.ts"],
+      "@excalidraw/math": [
+        "./node_modules/@excalidraw/excalidraw/dist/types/math/index.d.ts"
+      ],
+      "@excalidraw/utils/*": [
+        "./node_modules/@excalidraw/excalidraw/dist/types/utils/*"
+      ]
+    }
   },
   "include": ["src", "tests", "e2e", "vite.config.ts", "playwright.config.ts"]
 }

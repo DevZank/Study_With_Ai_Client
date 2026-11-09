@@ -9,6 +9,7 @@ import {
 } from "../../lib/api";
 import { Chat } from "../chat/Chat";
 import { Trails } from "../trails/Trails";
+import { Notebooks } from "../notebooks/Notebooks";
 
 function navigate(topicId = "", conversationId = "") {
   location.hash = topicId
@@ -32,7 +33,17 @@ function useRoute() {
     /^#\/topics\/([a-f0-9-]+)(?:\/conversations\/([a-f0-9-]+))?$/.exec(
       hash.split("?")[0],
     );
-  return { topicId: match?.[1] ?? "", conversationId: match?.[2] ?? "" };
+  const notebook =
+    /^#\/notebooks(?:\/([a-f0-9-]+))?(?:\/pages\/([a-f0-9-]+))?$/.exec(
+      hash.split("?")[0],
+    );
+  return {
+    topicId: match?.[1] ?? "",
+    conversationId: match?.[2] ?? "",
+    isNotebook: !!notebook,
+    notebookId: notebook?.[1] || "",
+    pageId: notebook?.[2] || "",
+  };
 }
 
 function TopicPanel({
@@ -136,6 +147,7 @@ function TopicPanel({
       ) : (
         <>
           <nav className="tabs" aria-label="Experiência de estudo">
+            <a href={"#/notebooks?topic=" + topic.id}>Caderno deste tema</a>
             <button
               aria-pressed={experience === "free"}
               onClick={() => {
@@ -212,7 +224,8 @@ function TopicPanel({
 }
 
 export function Topics() {
-  const { topicId, conversationId } = useRoute();
+  const { topicId, conversationId, isNotebook, notebookId, pageId } =
+    useRoute();
   const client = useQueryClient();
   const [filter, setFilter] = useState("active");
   const [search, setSearch] = useState("");
@@ -256,6 +269,7 @@ export function Topics() {
         <a className="brand" href="#/">
           Estudos com IA <span>ESPAÇO LOCAL</span>
         </a>
+        <a href="#/notebooks">Cadernos</a>
         <form
           onSubmit={(e) => {
             e.preventDefault();
@@ -326,7 +340,9 @@ export function Topics() {
         </p>
       </aside>
       <main id="content" tabIndex={-1}>
-        {topicId ? (
+        {isNotebook ? (
+          <Notebooks key={notebookId} notebookId={notebookId} pageId={pageId} />
+        ) : topicId ? (
           detail.isPending ? (
             <p role="status">Abrindo tema…</p>
           ) : detail.error ? (

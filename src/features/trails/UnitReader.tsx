@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Blocks } from "../content/Blocks";
+import { ClippingCapture } from "../notebooks/ClippingCapture";
 import { api, versionViewSchema, contextSchema, type UnitView } from "./api";
 
 export function UnitReader({
@@ -98,10 +99,12 @@ export function UnitReader({
                 Objetivos e critérios estão no módulo. Concluir informa sua
                 atividade, sem certificar domínio ou retenção.
               </p>
-              <Blocks
-                value={result.data.message.document}
-                editable={editable}
-              />
+              <ClippingCapture messageId={result.data.message.id}>
+                <Blocks
+                  value={result.data.message.document}
+                  editable={editable}
+                />
+              </ClippingCapture>
               <details>
                 <summary>Continuidade usada nesta versão</summary>
                 <p>

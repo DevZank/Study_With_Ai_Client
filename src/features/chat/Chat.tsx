@@ -11,6 +11,7 @@ import {
 } from "../../lib/api";
 import { useStream } from "./use-stream";
 import { Blocks } from "../content/Blocks";
+import { ClippingCapture } from "../notebooks/ClippingCapture";
 import { modes, type Mode } from "../content/schemas";
 
 export function Chat({
@@ -188,17 +189,30 @@ export function Chat({
               </span>
             </header>
             <div className="message-content">
-              {message.document ? (
-                <Blocks value={message.document} editable={editable} />
+              {message.role === "assistant" &&
+              message.status === "completed" ? (
+                <ClippingCapture messageId={message.id}>
+                  {message.document ? (
+                    <Blocks value={message.document} editable={editable} />
+                  ) : (
+                    <p>{message.content}</p>
+                  )}
+                </ClippingCapture>
               ) : (
-                <p>
-                  {message.content ||
-                    (message.response_format === "blocks"
-                      ? message.status === "running"
-                        ? "Gerando conteúdo estruturado; aguardando validação…"
-                        : "O rascunho incompleto foi ocultado com segurança."
-                      : "Aguardando o modelo…")}
-                </p>
+                <>
+                  {message.document ? (
+                    <Blocks value={message.document} editable={editable} />
+                  ) : (
+                    <p>
+                      {message.content ||
+                        (message.response_format === "blocks"
+                          ? message.status === "running"
+                            ? "Gerando conteúdo estruturado; aguardando validação…"
+                            : "O rascunho incompleto foi ocultado com segurança."
+                          : "Aguardando o modelo…")}
+                    </p>
+                  )}
+                </>
               )}
             </div>
             {message.notice && (

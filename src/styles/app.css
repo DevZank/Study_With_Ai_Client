@@ -394,3 +394,63 @@ button[aria-pressed="true"] {
   background: #e5edf4;
   border-color: #224e75;
 }
+.note-editor {
+  background: white;
+  border: 1px solid #bdcbd7;
+  border-radius: 8px;
+  padding: 12px;
+  margin: 12px 0;
+}
+.note-editor .tiptap {
+  min-height: 220px;
+  padding: 16px;
+  overflow-wrap: anywhere;
+}
+.note-editor .tiptap:focus {
+  outline: 2px solid #24587e;
+}
+.note-editor table {
+  border-collapse: collapse;
+  width: 100%;
+  table-layout: fixed;
+}
+.note-editor td,
+.note-editor th {
+  border: 1px solid #8397a7;
+  padding: 8px;
+}
+.drawing-canvas {
+  height: 650px;
+  position: relative;
+  border: 1px solid #a7b8c8;
+}
+.drawing-canvas .excalidraw button {
+  margin: 0;
+  min-width: auto;
+}
+.clipping-panel {
+  background: #f1f5fa;
+  border: 1px solid #b6c8d8;
+  padding: 16px;
+  margin: 12px 0;
+}
+.clipping-text {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  max-height: 350px;
+  overflow: auto;
+  user-select: text;
+  background: white;
+  padding: 12px;
+}
+[aria-label="Cadernos"] select {
+  max-width: 100%;
+}
+@media (max-width: 600px) {
+  .drawing-canvas {
+    height: 520px;
+  }
+  .note-editor {
+    padding: 6px;
+  }
+}

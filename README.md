@@ -21,6 +21,12 @@ No Marco 3, abra **Trilhas guiadas** em um tema. Informe objetivo, conhecimento 
 
 O backend precisa estar migrado até a revisão 0003, conforme seu README, com backup prévio dos dados pessoais. O E2E `milestone3.e2e.ts` valida plano, edição persistida, geração sob demanda, resumo, contexto, versões e responsividade. Veja a [ADR 0004](docs/architecture/0004-incremental-trails.md).
 
+No Marco 4, abra **Cadernos** no menu ou **Caderno deste tema**. Crie um caderno global, por tema ou vinculado à trilha; organize pastas/páginas, escreva texto rico e abra o quadro de desenho. Texto e cena têm salvamento automático e rascunho local de recuperação. Aguarde “Salvo no computador” antes de fechar. Conflitos e falhas preservam o rascunho e permitem exportá-lo para conciliação.
+
+Selecione texto de uma resposta concluída e use **Salvar no caderno**, ou abra **Selecionar trecho para o caderno** para blocos visuais. Escolha a página ou crie uma; a cópia é editável e a origem fica preservada. As páginas podem ser movidas entre cadernos e vinculadas entre si. O quadro exporta `.excalidraw` editável e PNG. Não há envio de notas para IA ou nuvem.
+
+O backend deve estar migrado até **0004**, com backup prévio. `npm ci` executa o postinstall que copia fontes e avisos de licença do quadro para os recursos locais; não é necessário CDN. Após atualizar os avisos manualmente, execute `node scripts/copy-editor-assets.mjs`. Os testes `milestone4.e2e.ts` cobrem texto, pastas, desenho, exportação, recortes, busca, vínculos, movimentação e recuperação após falha. Veja a [ADR 0005](docs/architecture/0005-local-notebooks.md).
+
 Para testes sem interferir no uso normal, defina STUDY_API_PORT=18000 e STUDY_WEB_PORT=15173 antes de iniciar os respectivos serviços. O backend aceita a origem local configurada em STUDY_WEB_PORT. O proxy continua restrito a 127.0.0.1. Configure E2E_BASE_URL=http://127.0.0.1:15173 no Playwright. Para exercício real em navegador, com API de produção e banco temporário, use E2E_REAL_MODEL e `npm run test:e2e -- --grep "exercício estruturado real"`.
 
 ## Verificações
