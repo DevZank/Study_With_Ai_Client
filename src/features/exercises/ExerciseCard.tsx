@@ -57,6 +57,8 @@ export function ExerciseCard({
       return Promise.all([
         client.invalidateQueries({ queryKey: ["attempts", exerciseId] }),
         client.invalidateQueries({ queryKey: ["exercise", exerciseId] }),
+        client.invalidateQueries({ queryKey: ["topic-progress"] }),
+        client.invalidateQueries({ queryKey: ["progress-overview"] }),
       ]);
     },
   });

@@ -193,7 +193,11 @@ export function Chat({
               message.status === "completed" ? (
                 <ClippingCapture messageId={message.id}>
                   {message.document ? (
-                    <Blocks value={message.document} editable={editable} />
+                    <Blocks
+                      value={message.document}
+                      editable={editable}
+                      messageId={message.id}
+                    />
                   ) : (
                     <p>{message.content}</p>
                   )}

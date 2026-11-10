@@ -103,6 +103,7 @@ export function UnitReader({
                 <Blocks
                   value={result.data.message.document}
                   editable={editable}
+                  messageId={result.data.message.id}
                 />
               </ClippingCapture>
               <details>

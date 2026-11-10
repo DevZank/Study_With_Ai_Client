@@ -1,4 +1,5 @@
-import { useState, useId } from "react";
+import { useState, useId, useRef } from "react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   blockSchema,
   documentSchema,
@@ -7,20 +8,88 @@ import {
 } from "./schemas";
 import { Formula } from "./Formula";
 import { ExerciseCard } from "../exercises/ExerciseCard";
+import { api, flashcardViewSchema } from "../progress/api";
 
-function Flashcard({ front, back }: { front: string; back: string }) {
+function SaveFlashcardButton({
+  messageId,
+  blockId,
+  title,
+}: {
+  messageId: string;
+  blockId: string;
+  title: string;
+}) {
+  const client = useQueryClient();
+  const op = useRef(crypto.randomUUID());
+  const save = useMutation({
+    mutationFn: () =>
+      api("/messages/" + messageId + "/flashcards", flashcardViewSchema, {
+        block_id: blockId,
+        concept_name: title,
+        operation_id: op.current,
+      }),
+    onSuccess: () =>
+      Promise.all([
+        client.invalidateQueries({ queryKey: ["flashcards"] }),
+        client.invalidateQueries({ queryKey: ["reviews-due"] }),
+        client.invalidateQueries({ queryKey: ["topic-progress"] }),
+        client.invalidateQueries({ queryKey: ["progress-overview"] }),
+      ]),
+  });
+  return (
+    <>
+      <button
+        type="button"
+        disabled={save.isPending || save.isSuccess}
+        onClick={() => save.mutate()}
+      >
+        {save.isSuccess
+          ? "Salvo na revisão espaçada"
+          : save.isPending
+            ? "Salvando cartão…"
+            : "Salvar na revisão espaçada"}
+      </button>
+      {save.error && <p role="alert">{save.error.message}</p>}
+    </>
+  );
+}
+
+function Flashcard({
+  blockId,
+  front,
+  back,
+  title,
+  messageId,
+  editable,
+}: {
+  blockId: string;
+  front: string;
+  back: string;
+  title: string;
+  messageId?: string;
+  editable: boolean;
+}) {
   const [visible, setVisible] = useState(false);
   return (
     <section className="flashcard">
       <h4>Recuperação ativa</h4>
       <p>{front}</p>
-      <button
-        type="button"
-        aria-expanded={visible}
-        onClick={() => setVisible(!visible)}
-      >
-        {visible ? "Ocultar verso" : "Mostrar verso"}
-      </button>
+      <div className="actions">
+        <button
+          type="button"
+          aria-expanded={visible}
+          onClick={() => setVisible(!visible)}
+        >
+          {visible ? "Ocultar verso" : "Mostrar verso"}
+        </button>
+        {messageId && editable && (
+          <SaveFlashcardButton
+            messageId={messageId}
+            blockId={blockId}
+            title={title}
+          />
+        )}
+      </div>
       {visible && <p>{back}</p>}
     </section>
   );
@@ -103,9 +172,13 @@ function Diagram({
 function Block({
   block,
   editable,
+  title,
+  messageId,
 }: {
   block: ContentBlock;
   editable: boolean;
+  title: string;
+  messageId?: string;
 }) {
   switch (block.type) {
     case "code":
@@ -148,7 +221,16 @@ function Block({
         </div>
       );
     case "flashcard":
-      return <Flashcard front={block.front} back={block.back} />;
+      return (
+        <Flashcard
+          blockId={block.id}
+          front={block.front}
+          back={block.back}
+          title={title}
+          messageId={messageId}
+          editable={editable}
+        />
+      );
     case "timeline":
       return (
         <ol className="timeline">
@@ -186,9 +268,11 @@ function Block({
 export function Blocks({
   value,
   editable = true,
+  messageId,
 }: {
   value: unknown;
   editable?: boolean;
+  messageId?: string;
 }) {
   const doc = documentSchema.safeParse(value);
   if (!doc.success)
@@ -204,7 +288,13 @@ export function Blocks({
       {doc.data.blocks.map((value, index) => {
         const parsed = blockSchema.safeParse(value);
         return parsed.success ? (
-          <Block key={index} block={parsed.data} editable={editable} />
+          <Block
+            key={index}
+            block={parsed.data}
+            editable={editable}
+            title={doc.data.title}
+            messageId={messageId}
+          />
         ) : (
           <p key={index} role="status">
             Bloco não suportado; conteúdo ocultado com segurança.

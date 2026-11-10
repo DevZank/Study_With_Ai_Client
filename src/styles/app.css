@@ -315,13 +315,16 @@ summary {
   overflow-x: auto;
   margin: 16px 0;
 }
-.structured-content table {
+.structured-content table,
+.table-scroll table {
   width: 100%;
   border-collapse: collapse;
   text-align: left;
 }
 .structured-content td,
-.structured-content th {
+.structured-content th,
+.table-scroll td,
+.table-scroll th {
   padding: 10px;
   border: 1px solid #b4c5d3;
 }
@@ -445,6 +448,12 @@ button[aria-pressed="true"] {
 }
 [aria-label="Cadernos"] select {
   max-width: 100%;
+}
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 16px;
+  margin: 16px 0;
 }
 @media (max-width: 600px) {
   .drawing-canvas {

@@ -10,6 +10,8 @@ import {
 import { Chat } from "../chat/Chat";
 import { Trails } from "../trails/Trails";
 import { Notebooks } from "../notebooks/Notebooks";
+import { Memorize } from "../progress/Memorize";
+import { GlobalProgress, TopicProgressPanel } from "../progress/Progress";
 
 function navigate(topicId = "", conversationId = "") {
   location.hash = topicId
@@ -37,13 +39,22 @@ function useRoute() {
     /^#\/notebooks(?:\/([a-f0-9-]+))?(?:\/pages\/([a-f0-9-]+))?$/.exec(
       hash.split("?")[0],
     );
+  const isProgress = hash.split("?")[0] === "#/progress";
   return {
     topicId: match?.[1] ?? "",
     conversationId: match?.[2] ?? "",
     isNotebook: !!notebook,
     notebookId: notebook?.[1] || "",
     pageId: notebook?.[2] || "",
+    isProgress,
   };
+}
+
+function initialExperience() {
+  if (location.hash.includes("view=trails")) return "trails";
+  if (location.hash.includes("view=memorize")) return "memorize";
+  if (location.hash.includes("view=progress")) return "progress";
+  return "free";
 }
 
 function TopicPanel({
@@ -55,9 +66,7 @@ function TopicPanel({
 }) {
   const client = useQueryClient();
   const [title, setTitle] = useState(topic.title);
-  const [experience, setExperience] = useState(
-    location.hash.includes("view=trails") ? "trails" : "free",
-  );
+  const [experience, setExperience] = useState(initialExperience);
   const list = useQuery({
     queryKey: ["conversations", topic.id],
     queryFn: () =>
@@ -179,9 +188,45 @@ function TopicPanel({
             >
               Trilhas guiadas
             </button>
+            <button
+              aria-pressed={experience === "memorize"}
+              onClick={() => {
+                setExperience("memorize");
+                history.replaceState(
+                  null,
+                  "",
+                  location.pathname +
+                    location.search +
+                    location.hash.split("?")[0] +
+                    "?view=memorize",
+                );
+              }}
+            >
+              Memorizar e revisão
+            </button>
+            <button
+              aria-pressed={experience === "progress"}
+              onClick={() => {
+                setExperience("progress");
+                history.replaceState(
+                  null,
+                  "",
+                  location.pathname +
+                    location.search +
+                    location.hash.split("?")[0] +
+                    "?view=progress",
+                );
+              }}
+            >
+              Progresso e métricas
+            </button>
           </nav>
           {experience === "trails" ? (
             <Trails topicId={topic.id} editable={topic.status === "active"} />
+          ) : experience === "memorize" ? (
+            <Memorize topicId={topic.id} editable={topic.status === "active"} />
+          ) : experience === "progress" ? (
+            <TopicProgressPanel topicId={topic.id} />
           ) : (
             <>
               <nav className="tabs" aria-label="Conversas do tema">
@@ -224,8 +269,14 @@ function TopicPanel({
 }
 
 export function Topics() {
-  const { topicId, conversationId, isNotebook, notebookId, pageId } =
-    useRoute();
+  const {
+    topicId,
+    conversationId,
+    isNotebook,
+    notebookId,
+    pageId,
+    isProgress,
+  } = useRoute();
   const client = useQueryClient();
   const [filter, setFilter] = useState("active");
   const [search, setSearch] = useState("");
@@ -269,7 +320,10 @@ export function Topics() {
         <a className="brand" href="#/">
           Estudos com IA <span>ESPAÇO LOCAL</span>
         </a>
-        <a href="#/notebooks">Cadernos</a>
+        <div className="actions">
+          <a href="#/notebooks">Cadernos</a>
+          <a href="#/progress">Revisões e progresso</a>
+        </div>
         <form
           onSubmit={(e) => {
             e.preventDefault();
@@ -342,6 +396,8 @@ export function Topics() {
       <main id="content" tabIndex={-1}>
         {isNotebook ? (
           <Notebooks key={notebookId} notebookId={notebookId} pageId={pageId} />
+        ) : isProgress ? (
+          <GlobalProgress />
         ) : topicId ? (
           detail.isPending ? (
             <p role="status">Abrindo tema…</p>

@@ -326,7 +326,7 @@ export function Trails({
           </p>
           <p role="status">
             Conclusão informada: {trail.completed_units} de {trail.total_units}{" "}
-            unidades. Domínio e retenção não estimados.
+            unidades (indicador separado de domínio e retenção estimados).
           </p>
           <details>
             <summary>Renomear trilha</summary>
